@@ -1,0 +1,591 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Crypto Analysis — Dark Glassmorphism + Neon */
+@layer base {
+  :root {
+    /* Deep space background */
+    --background: 230 35% 5%;
+    --foreground: 210 40% 98%;
+
+    --card: 230 30% 9%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 230 32% 8%;
+    --popover-foreground: 210 40% 98%;
+
+    /* Neon cyan primary */
+    --primary: 187 100% 55%;
+    --primary-foreground: 230 50% 5%;
+    --primary-glow: 187 100% 65%;
+
+    /* Neon violet secondary */
+    --secondary: 270 95% 65%;
+    --secondary-foreground: 210 40% 98%;
+    --secondary-glow: 280 100% 75%;
+
+    --muted: 230 25% 14%;
+    --muted-foreground: 220 15% 65%;
+
+    --accent: 270 95% 65%;
+    --accent-foreground: 210 40% 98%;
+
+    --success: 145 80% 55%;
+    --success-foreground: 230 50% 5%;
+    --destructive: 0 90% 62%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 230 30% 18%;
+    --input: 230 30% 14%;
+    --ring: 187 100% 55%;
+
+    --radius: 1rem;
+
+    /* Glass surfaces */
+    --glass: 230 30% 12% / 0.6;
+    --glass-border: 210 100% 80% / 0.08;
+
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(187 100% 55%), hsl(270 95% 65%));
+    --gradient-hero: radial-gradient(ellipse at top, hsl(270 95% 25% / 0.5), transparent 60%),
+      radial-gradient(ellipse at bottom right, hsl(187 100% 25% / 0.4), transparent 60%),
+      hsl(230 35% 5%);
+    --gradient-card: linear-gradient(135deg, hsl(230 30% 12% / 0.7), hsl(230 30% 8% / 0.5));
+    --gradient-glow: radial-gradient(circle at center, hsl(187 100% 55% / 0.25), transparent 70%);
+
+    /* Shadows / glows */
+    --shadow-neon: 0 0 30px hsl(187 100% 55% / 0.35), 0 0 60px hsl(270 95% 65% / 0.15);
+    --shadow-card: 0 8px 32px hsl(230 50% 2% / 0.5), inset 0 1px 0 hsl(210 100% 80% / 0.06);
+    --shadow-glow-violet: 0 0 40px hsl(270 95% 65% / 0.4);
+    --shadow-glow-cyan: 0 0 40px hsl(187 100% 55% / 0.4);
+
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+    --sidebar-background: 230 35% 6%;
+    --sidebar-foreground: 210 40% 90%;
+    --sidebar-primary: 187 100% 55%;
+    --sidebar-primary-foreground: 230 50% 5%;
+    --sidebar-accent: 230 30% 12%;
+    --sidebar-accent-foreground: 210 40% 98%;
+    --sidebar-border: 230 30% 18%;
+    --sidebar-ring: 187 100% 55%;
+  }
+
+  .dark {
+    /* Same theme — app is dark by default */
+    --background: 230 35% 5%;
+    --foreground: 210 40% 98%;
+    --card: 230 30% 9%;
+    --card-foreground: 210 40% 98%;
+    --popover: 230 32% 8%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 187 100% 55%;
+    --primary-foreground: 230 50% 5%;
+    --secondary: 270 95% 65%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 230 25% 14%;
+    --muted-foreground: 220 15% 65%;
+    --accent: 270 95% 65%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 90% 62%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 230 30% 18%;
+    --input: 230 30% 14%;
+    --ring: 187 100% 55%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html,
+  body,
+  #root {
+    @apply min-h-screen;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    background: var(--gradient-hero);
+    background-attachment: fixed;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: hsl(var(--background));
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: hsl(var(--muted));
+    border-radius: 8px;
+    border: 2px solid hsl(var(--background));
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--primary) / 0.5);
+  }
+}
+
+@layer components {
+  .glass {
+    background: var(--gradient-card);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid hsl(var(--glass-border));
+    box-shadow: var(--shadow-card);
+  }
+
+
+  .glass-hover {
+  @apply transition-all duration-300;
+}
+
+.glass-hover:hover {
+  border-color: hsl(var(--primary) / 0.4);
+  box-shadow: var(--shadow-card), 0 0 24px hsl(var(--primary) / 0.18);
+  transform: translateY(-2px);
+}
+
+  .text-gradient {
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .glow-cyan {
+    box-shadow: var(--shadow-glow-cyan);
+  }
+
+  .glow-violet {
+    box-shadow: var(--shadow-glow-violet);
+  }
+
+  .grid-bg {
+    background-image:
+      linear-gradient(hsl(var(--primary) / 0.05) 1px, transparent 1px),
+      linear-gradient(90deg, hsl(var(--primary) / 0.05) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+}
+
+@layer utilities {
+  .animate-pulse-glow {
+    animation: pulse-glow 3s ease-in-out infinite;
+  }
+
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+
+  .animate-shimmer {
+    background: linear-gradient(90deg,
+        transparent,
+        hsl(var(--primary) / 0.15),
+        transparent);
+    background-size: 200% 100%;
+    animation: shimmer 2s linear infinite;
+  }
+}
+
+@keyframes pulse-glow {
+
+  0%,
+  100% {
+    box-shadow: 0 0 20px hsl(var(--primary) / 0.3);
+  }
+
+  50% {
+    box-shadow: 0 0 40px hsl(var(--primary) / 0.6), 0 0 60px hsl(var(--secondary) / 0.3);
+  }
+}
+
+@keyframes float {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-12px);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+@media print {
+  header, footer, button, .no-print {
+    display: none !important;
+  }
+  
+  body {
+    background: white !important;
+    color: black !important;
+  }
+  
+  .glass {
+    background: white !important;
+    border: 1px solid #eee !important;
+    box-shadow: none !important;
+    color: black !important;
+    backdrop-filter: none !important;
+  }
+  
+  .text-white, .text-gradient, .text-primary {
+    color: black !important;
+  }
+
+  .container {
+    max-width: 100% !important;
+    padding: 0 !important;
+  }
+  
+  #analysis-results {
+    display: block !important;
+  }
+}
+
+/* --- Advanced Theme Extensions --- */
+.mesh-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  background: 
+    radial-gradient(at 0% 0%, hsla(230, 100%, 15%, 1) 0, transparent 50%),
+    radial-gradient(at 50% 0%, hsla(260, 100%, 10%, 1) 0, transparent 50%),
+    radial-gradient(at 100% 0%, hsla(230, 100%, 15%, 1) 0, transparent 50%),
+    radial-gradient(at 50% 50%, hsla(280, 100%, 5%, 1) 0, transparent 50%),
+    radial-gradient(at 0% 100%, hsla(230, 100%, 15%, 1) 0, transparent 50%),
+    radial-gradient(at 100% 100%, hsla(260, 100%, 10%, 1) 0, transparent 50%);
+  filter: blur(80px);
+  opacity: 0.8;
+  animation: mesh-flow 20s ease-in-out infinite alternate;
+}
+
+@keyframes mesh-flow {
+  0% { transform: scale(1) rotate(0deg); }
+  100% { transform: scale(1.1) rotate(3deg); }
+}
+
+.neon-border {
+  position: relative;
+}
+
+.neon-border::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  background: linear-gradient(45deg, hsl(var(--primary)), transparent, hsl(var(--secondary)), transparent);
+  border-radius: inherit;
+  z-index: -1;
+  opacity: 0.3;
+  transition: opacity 0.3s ease;
+}
+
+.neon-border:hover::before {
+  opacity: 0.8;
+}
+
+.glass-morphism {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(12px) saturate(180%);
+  -webkit-backdrop-filter: blur(12px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+}
+
+.float-shadow {
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.float-shadow:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 20px 40px -20px hsl(var(--primary) / 0.5);
+}
+
+/* ═══════════════════════════════════════════════════════
+   CryptoSense AI Chat
+   ═══════════════════════════════════════════════════════ */
+
+/* Floating Action Button */
+.cs-chat-fab {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 9999;
+  cursor: pointer;
+  border: none;
+  background: none;
+  padding: 0;
+}
+
+.cs-chat-fab-inner {
+  width: 60px;
+  height: 60px;
+  border-radius: 20px;
+  background: var(--gradient-primary);
+  display: grid;
+  place-items: center;
+  box-shadow: 0 8px 32px hsl(187 100% 55% / 0.4), 0 0 0 1px hsl(187 100% 55% / 0.2);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  z-index: 2;
+}
+
+.cs-chat-fab:hover .cs-chat-fab-inner {
+  transform: scale(1.08);
+  box-shadow: 0 12px 40px hsl(187 100% 55% / 0.6), 0 0 0 1px hsl(187 100% 55% / 0.3);
+}
+
+.cs-chat-fab-ring {
+  position: absolute;
+  inset: -6px;
+  border-radius: 26px;
+  border: 2px solid hsl(187 100% 55% / 0.3);
+  animation: chatRingPulse 2s ease-in-out infinite;
+  z-index: 1;
+}
+
+.cs-chat-fab-label {
+  position: absolute;
+  right: calc(100% + 12px);
+  top: 50%;
+  transform: translateY(-50%) translateX(8px);
+  background: hsl(230 30% 12% / 0.95);
+  border: 1px solid hsl(210 100% 80% / 0.1);
+  backdrop-filter: blur(12px);
+  padding: 6px 14px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 800;
+  color: hsl(210 40% 98%);
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.cs-chat-fab:hover .cs-chat-fab-label {
+  opacity: 1;
+  transform: translateY(-50%) translateX(0);
+}
+
+@keyframes chatRingPulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(1.12); }
+}
+
+@keyframes chatPulse {
+  0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
+  40% { transform: scale(1); opacity: 1; }
+}
+
+/* Chat Panel */
+.cs-chat-panel {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  width: 420px;
+  height: 600px;
+  max-height: calc(100vh - 48px);
+  z-index: 10000;
+  display: flex;
+  flex-direction: column;
+  border-radius: 28px;
+  overflow: hidden;
+  background: hsl(230 30% 8% / 0.95);
+  backdrop-filter: blur(40px) saturate(180%);
+  -webkit-backdrop-filter: blur(40px) saturate(180%);
+  border: 1px solid hsl(210 100% 80% / 0.08);
+  box-shadow:
+    0 25px 80px -12px hsl(230 50% 2% / 0.8),
+    0 0 0 1px hsl(187 100% 55% / 0.06),
+    0 0 80px -20px hsl(187 100% 55% / 0.15),
+    inset 0 1px 0 hsl(210 100% 80% / 0.05);
+  animation: chatSlideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.cs-chat-panel--expanded {
+  width: 560px;
+  height: 720px;
+}
+
+@media (max-width: 480px) {
+  .cs-chat-panel {
+    bottom: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    max-height: 100vh;
+    border-radius: 0;
+  }
+}
+
+@keyframes chatSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Header */
+.cs-chat-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid hsl(210 100% 80% / 0.06);
+  background: hsl(230 30% 10% / 0.5);
+}
+
+/* Messages Area */
+.cs-chat-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px 0;
+  scroll-behavior: smooth;
+}
+
+.cs-chat-messages::-webkit-scrollbar {
+  width: 4px;
+}
+
+.cs-chat-messages::-webkit-scrollbar-thumb {
+  background: hsl(230 25% 25%);
+  border-radius: 4px;
+}
+
+/* Bubbles */
+.cs-chat-bubble {
+  display: flex;
+  gap: 10px;
+  padding: 6px 16px;
+  animation: chatBubbleIn 0.3s ease-out;
+}
+
+.cs-chat-bubble--user {
+  justify-content: flex-end;
+}
+
+.cs-chat-bubble--ai {
+  justify-content: flex-start;
+}
+
+@keyframes chatBubbleIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Content */
+.cs-chat-content {
+  max-width: 85%;
+  padding: 12px 16px;
+  border-radius: 20px;
+  line-height: 1.5;
+}
+
+.cs-chat-content--user {
+  background: hsl(187 100% 55% / 0.15);
+  border: 1px solid hsl(187 100% 55% / 0.2);
+  border-bottom-right-radius: 6px;
+  color: hsl(210 40% 98%);
+}
+
+.cs-chat-content--ai {
+  background: hsl(230 30% 14% / 0.6);
+  border: 1px solid hsl(210 100% 80% / 0.06);
+  border-bottom-left-radius: 6px;
+  color: hsl(220 15% 75%);
+}
+
+.cs-chat-content--ai strong {
+  color: hsl(210 40% 98%);
+}
+
+/* Input Area */
+.cs-chat-input-area {
+  border-top: 1px solid hsl(210 100% 80% / 0.06);
+  padding: 12px 16px 16px;
+  background: hsl(230 30% 10% / 0.5);
+}
+
+.cs-chat-input-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: hsl(230 30% 14% / 0.8);
+  border: 1px solid hsl(210 100% 80% / 0.08);
+  border-radius: 18px;
+  padding: 4px 4px 4px 16px;
+  transition: all 0.3s ease;
+}
+
+.cs-chat-input-wrapper:focus-within {
+  border-color: hsl(187 100% 55% / 0.4);
+  box-shadow: 0 0 0 3px hsl(187 100% 55% / 0.08);
+}
+
+.cs-chat-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: hsl(210 40% 98%);
+  font-size: 13px;
+  font-weight: 500;
+  padding: 8px 0;
+}
+
+.cs-chat-input::placeholder {
+  color: hsl(220 15% 45%);
+  font-weight: 400;
+}
+
+.cs-chat-send {
+  width: 40px;
+  height: 40px;
+  border-radius: 14px;
+  border: none;
+  background: var(--gradient-primary);
+  color: white;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.cs-chat-send:hover:not(:disabled) {
+  transform: scale(1.05);
+  box-shadow: 0 4px 16px hsl(187 100% 55% / 0.4);
+}
+
+.cs-chat-send:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
