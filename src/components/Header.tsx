@@ -7,6 +7,7 @@ import {
   DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel,
   DropdownMenuSeparator, DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { toast } from "sonner";
 
 export const Header = ({ onNavigate }: { onNavigate?: (view: string) => void }) => {
   const { user, profile, signOut } = useAuth();
@@ -77,7 +78,7 @@ export const Header = ({ onNavigate }: { onNavigate?: (view: string) => void }) 
                 </DropdownMenuItem>
                 <DropdownMenuSeparator className="bg-white/5" />
                 <DropdownMenuItem
-                  onClick={signOut}
+                  onClick={() => toast.info("Sign out is disabled in Demo Mode.")}
                   className="cursor-pointer text-destructive focus:text-destructive hover:bg-destructive/10 rounded-xl p-2.5"
                 >
                   <LogOut className="mr-2 h-4 w-4" /> Sign Out

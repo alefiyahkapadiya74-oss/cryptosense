@@ -1,29 +1,42 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import { Sparkles, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { useAuth } from "@/contexts/AuthContext";
 
 export const Login = () => {
+  const { user } = useAuth();
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isSignUp, setIsSignUp] = useState(false);
 
+  if (user) {
+    return <Navigate to="/" replace />;
+  }
+
   const handleGoogleLogin = async () => {
     setLoading(true);
     try {
-      const { error } = await supabase.auth.signInWithOAuth({
+      console.log("Initiating Google OAuth login with origin:", window.location.origin);
+      const { data, error } = await supabase.auth.signInWithOAuth({
         provider: "google",
         options: {
           redirectTo: `${window.location.origin}/`,
         },
       });
       if (error) throw error;
+      if (!data?.url) {
+        throw new Error("No redirect URL returned from Supabase Auth.");
+      }
+      console.log("Redirecting to Google OAuth URL:", data.url);
+      window.location.assign(data.url);
     } catch (err: unknown) {
       const error = err as Error;
+      console.error("Google OAuth login error:", error);
       toast.error(error.message || "An authentication error occurred.");
       setLoading(false);
     }

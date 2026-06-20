@@ -110,18 +110,59 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       try {
         const { data: { session: initialSession }, error } = await supabase.auth.getSession();
         if (error) throw error;
-        setSession(initialSession);
         
         if (initialSession?.user) {
+          setSession(initialSession);
           setUser(initialSession.user);
           await syncProfile(initialSession.user);
+          setLoading(false);
         } else {
-          setUser(null);
-          setProfile(null);
+          console.log("No active session. Initializing automatic demo login...");
+          const demoEmail = "demo@cryptosense.com";
+          const demoPassword = "Password123!";
+          
+          let authSession = null;
+          
+          try {
+            const { data, error: signInError } = await supabase.auth.signInWithPassword({
+              email: demoEmail,
+              password: demoPassword,
+            });
+            if (signInError) throw signInError;
+            authSession = data.session;
+          } catch (signInErr) {
+            console.log("Demo account does not exist. Registering initial account...");
+            const { data, error: signUpError } = await supabase.auth.signUp({
+              email: demoEmail,
+              password: demoPassword,
+              options: {
+                data: {
+                  username: "demosatoshi",
+                  full_name: "Satoshi Nakamoto",
+                  avatar_url: "https://images.unsplash.com/photo-1621761191319-c6fb62004040?w=120&auto=format&fit=crop&q=80",
+                }
+              }
+            });
+            if (signUpError) {
+              console.error("Auto registration failed:", signUpError);
+            } else {
+              authSession = data.session;
+            }
+          }
+          
+          if (authSession) {
+            setSession(authSession);
+            setUser(authSession.user);
+            await syncProfile(authSession.user);
+          } else {
+            setSession(null);
+            setUser(null);
+            setProfile(null);
+          }
+          setLoading(false);
         }
       } catch (err) {
         console.error("Error fetching initial session:", err instanceof Error ? err.message : err);
-      } finally {
         setLoading(false);
       }
     };
