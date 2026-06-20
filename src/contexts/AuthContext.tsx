@@ -22,6 +22,8 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+let demoLoginStarted = false;
+
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
@@ -105,70 +107,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, [user, fetchProfile]);
 
   useEffect(() => {
-    // Check initial session
-    const getInitialSession = async () => {
-      try {
-        const { data: { session: initialSession }, error } = await supabase.auth.getSession();
-        if (error) throw error;
-        
-        if (initialSession?.user) {
-          setSession(initialSession);
-          setUser(initialSession.user);
-          await syncProfile(initialSession.user);
-          setLoading(false);
-        } else {
-          console.log("No active session. Initializing automatic demo login...");
-          const demoEmail = "demo@cryptosense.com";
-          const demoPassword = "Password123!";
-          
-          let authSession = null;
-          
-          try {
-            const { data, error: signInError } = await supabase.auth.signInWithPassword({
-              email: demoEmail,
-              password: demoPassword,
-            });
-            if (signInError) throw signInError;
-            authSession = data.session;
-          } catch (signInErr) {
-            console.log("Demo account does not exist. Registering initial account...");
-            const { data, error: signUpError } = await supabase.auth.signUp({
-              email: demoEmail,
-              password: demoPassword,
-              options: {
-                data: {
-                  username: "demosatoshi",
-                  full_name: "Satoshi Nakamoto",
-                  avatar_url: "https://images.unsplash.com/photo-1621761191319-c6fb62004040?w=120&auto=format&fit=crop&q=80",
-                }
-              }
-            });
-            if (signUpError) {
-              console.error("Auto registration failed:", signUpError);
-            } else {
-              authSession = data.session;
-            }
-          }
-          
-          if (authSession) {
-            setSession(authSession);
-            setUser(authSession.user);
-            await syncProfile(authSession.user);
-          } else {
-            setSession(null);
-            setUser(null);
-            setProfile(null);
-          }
-          setLoading(false);
-        }
-      } catch (err) {
-        console.error("Error fetching initial session:", err instanceof Error ? err.message : err);
-        setLoading(false);
-      }
-    };
-
-    getInitialSession();
-
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, newSession) => {
       setSession(newSession);
@@ -177,11 +115,53 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       
       if (newUser) {
         await syncProfile(newUser);
+        setLoading(false);
       } else {
         setProfile(null);
+        
+        if (event === "SIGNED_OUT") {
+          demoLoginStarted = false;
+          setLoading(false);
+          return;
+        }
+
+        // If there's no session and login isn't started yet, trigger the demo login
+        if (!demoLoginStarted) {
+          demoLoginStarted = true;
+          console.log("No active session. Initializing automatic demo login...");
+          const demoEmail = "demo@cryptosense.com";
+          const demoPassword = "Password123!";
+          
+          try {
+            const { error: signInError } = await supabase.auth.signInWithPassword({
+              email: demoEmail,
+              password: demoPassword,
+            });
+            
+            if (signInError) {
+              console.log("Demo account does not exist. Registering initial account...");
+              const { error: signUpError } = await supabase.auth.signUp({
+                email: demoEmail,
+                password: demoPassword,
+                options: {
+                  data: {
+                    username: "demosatoshi",
+                    full_name: "Satoshi Nakamoto",
+                    avatar_url: "https://images.unsplash.com/photo-1621761191319-c6fb62004040?w=120&auto=format&fit=crop&q=80",
+                  }
+                }
+              });
+              if (signUpError) {
+                console.error("Auto registration failed:", signUpError);
+                setLoading(false);
+              }
+            }
+          } catch (err) {
+            console.error("Error in automatic demo login:", err);
+            setLoading(false);
+          }
+        }
       }
-      
-      setLoading(false);
       
       if (event === "SIGNED_IN") {
         toast.success("Successfully signed in!");
