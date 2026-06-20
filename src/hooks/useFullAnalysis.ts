@@ -5,7 +5,7 @@
  */
 
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { fetchCoinChart } from "@/lib/coingecko";
+import { fetchCoinChart, fetchTopCoins } from "@/lib/coingecko";
 import {
   fetchCoinDetail,
   fetchRedditPosts,

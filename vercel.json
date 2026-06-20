@@ -1,5 +1,9 @@
 {
   "rewrites": [
+    { "source": "/coingecko/(.*)", "destination": "https://api.coingecko.com/$1" },
+    { "source": "/alternative/(.*)", "destination": "https://api.alternative.me/$1" },
+    { "source": "/reddit/(.*)", "destination": "https://www.reddit.com/$1" },
+    { "source": "/coinpaprika/(.*)", "destination": "https://api.coinpaprika.com/$1" },
     { "source": "/(.*)", "destination": "/index.html" }
   ]
 }
